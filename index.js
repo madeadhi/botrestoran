@@ -8,7 +8,16 @@ app.use(express.json());
 
 app.post("/", (request, response, next) => {
     const agent = new WebhookClient({ request, response });
-    console.log(JSON.stringify(request.body))
+    let intent = new Map();
+
+    const booking = (agent) => {
+        agent.add(`Booking memek?`)
+    }
+
+    intent.set('booking', booking);
+
+    agent.handleRequest(intent)
+
     return response.status(200).json(request.body)
 })
 
