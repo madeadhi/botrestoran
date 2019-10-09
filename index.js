@@ -22,7 +22,7 @@ app.post("/", (request, response, next) => {
 
   const pesan = async agent => {
     try {
-      console.log(request.body);
+      console.log(JSON.stringify(request.body));
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
       result.map(data =>
         agent.add(
