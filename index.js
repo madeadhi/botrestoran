@@ -28,11 +28,11 @@ app.post("/", (request, response, next) => {
           new Card({
             title: data.nama_makanan,
             imageUrl: data.gambar,
-            text: `${data.keterangan}\nHarga: ${Number(
+            text: `${data.keterangan}\nHarga: Rp${Number(
               data.harga
-            ).toLocaleString("ID", { style: "currency", currency: "IDR" })}`,
+            ).toLocaleString("ID")}`,
             buttonText: "Pesan",
-            buttonUrl: "https://www.google.com"
+            buttonUrl: "hallo"
           })
         )
       );
