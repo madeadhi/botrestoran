@@ -22,6 +22,7 @@ app.post("/", (request, response, next) => {
 
   const pesan = async agent => {
     try {
+      console.log(request.body);
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
       result.map(data =>
         agent.add(
@@ -32,7 +33,7 @@ app.post("/", (request, response, next) => {
               data.harga
             ).toLocaleString("ID")}`,
             buttonText: "Pesan",
-            buttonUrl: "hallo"
+            buttonUrl: `pesan-${data.id}`
           })
         )
       );
@@ -44,7 +45,8 @@ app.post("/", (request, response, next) => {
   const fallback = async agent => {
     try {
       const text = request.body.queryResult.queryText;
-      agent.add(`Kakak mengirimkan pesan ${text}`);
+      const intent = text.split("-")[0];
+      const id = text.split("-")[1];
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
