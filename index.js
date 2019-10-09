@@ -31,11 +31,11 @@ app.post("/", (request, response, next) => {
             text: `${data.keterangan}\nHarga: ${Number(
               data.harga
             ).toLocaleString("ID", { style: "currency", currency: "IDR" })}`,
-            buttonText: "Pesan"
+            buttonText: "Pesan",
+            buttonUrl: "https://www.google.com"
           })
         )
       );
-      agent.add("Pesanan hilang");
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
