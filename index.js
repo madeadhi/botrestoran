@@ -2,12 +2,12 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const port = process.env.PORT;
-const { WebHookClient } = require("dialogflow-fulfillment")
+const { WebhookClient } = require("dialogflow-fulfillment")
 
 app.use(express.json());
 
 app.post("/", (request, response, next) => {
-    const agent = new WebHookClient({ request, response });
+    const agent = new WebhookClient({ request, response });
     return response.status(200).json(request.body)
 })
 
