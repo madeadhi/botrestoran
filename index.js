@@ -17,8 +17,6 @@ app.post("/", (request, response, next) => {
     intent.set('booking', booking);
 
     agent.handleRequest(intent)
-
-    return response.status(200).json(request.body)
 })
 
 app.listen(port, ()=> {
