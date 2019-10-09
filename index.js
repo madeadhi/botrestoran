@@ -23,7 +23,7 @@ app.post("/", (request, response, next) => {
   const pesan = async agent => {
     try {
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
-      console.log(result);
+      console.log(JSON.stringify(result));
       agent.add("Pesanan hilang");
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
