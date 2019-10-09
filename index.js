@@ -23,33 +23,22 @@ app.post("/", (request, response, next) => {
   const pesan = async agent => {
     try {
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
-      result.map(data => console.log(data.id));
+      result.map(data =>
+        agent.add(
+          new Card({
+            title: data.nama_makanan,
+            imageUrl: data.gambar,
+            text: `${data.keterangan}\nHarga: ${Number(
+              data.harga
+            ).toLocaleString("ID", { style: "currency", currency: "IDR" })}`,
+            buttonText: "Pesan"
+          })
+        )
+      );
       agent.add("Pesanan hilang");
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
-    // sequelize
-    //   .query("SELECT * FROM tb_menu")
-    //   .then(([result]) => {
-    //     agent.add(
-    //       "Berikut merupakan daftar makanan dan minuman di Warung Robert:"
-    //     );
-    //     result.map(data =>
-    //       agent.add(
-    //         new Card({
-    //           title: data.nama_makanan,
-    //           imageUrl: data.gambar,
-    //           text: `${data.keterangan}\nHarga: ${Number(
-    //             data.harga
-    //           ).toLocaleString("ID", { style: "currency", currency: "IDR" })}`,
-    //           buttonText: "Pesan"
-    //         })
-    //       )
-    //     );
-    //   })
-    //   .catch(() =>
-    //     agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali")
-    //   );
   };
 
   intent.set("booking", booking);
