@@ -43,8 +43,7 @@ app.post("/", (request, response, next) => {
 
   const fallback = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
-      console.log(JSON.stringify(agent));
+      console.log(JSON.stringify(request.body.payload));
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
