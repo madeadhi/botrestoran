@@ -8,6 +8,7 @@ app.use(express.json());
 
 app.post("/", (request, response, next) => {
     const agent = new WebhookClient({ request, response });
+    console.log(JSON.stringify(request.body))
     return response.status(200).json(request.body)
 })
 
