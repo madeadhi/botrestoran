@@ -41,8 +41,18 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const fallback = async agent => {
+    try {
+      console.log(JSON.stringify(request.body));
+      console.log(JSON.stringify(agent));
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
   intent.set("booking", booking);
   intent.set("pesan_mknmin", pesan);
+  intent.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intent);
 });
