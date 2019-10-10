@@ -65,6 +65,7 @@ app.post("/", (request, response, next) => {
       );
       agent.add(respon[0]);
     } catch (error) {
+      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
