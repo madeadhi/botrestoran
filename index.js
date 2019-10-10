@@ -26,9 +26,24 @@ app.post("/", (request, response, next) => {
       const [user] = await sequelize.query(
         `SELECT * FROM tb_user WHERE tb_user.id_user = ${sender.id}`
       );
-      console.log(user);
 
-      agent.add(`${message.text} kak`);
+      if (user.length > 0) {
+        const [result] = await sequelize.query(
+          "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'salam'"
+        );
+
+        console.log(result);
+
+        agent.add(`Halo kak ${user[0].nama}`);
+      } else {
+        const [result] = await sequelize.query(
+          "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'salam'"
+        );
+
+        console.log(result);
+
+        agent.add(`${message.text} kak, kakak belum punya akun nih`);
+      }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
