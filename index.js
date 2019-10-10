@@ -71,8 +71,15 @@ app.post("/", (request, response, next) => {
 
   const registrasiUser = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
-      agent.add("Berhasil kak");
+      const {
+        message,
+        sender
+      } = request.body.originalDetectIntentRequest.payload.data;
+      const [result, metadata] = await sequelize.query(
+        `INSERT INTO tb_user VALUES (${sender.id}, ${message.text})`
+      );
+      console.log({ result, metadata });
+      agent.add("Hmm... kayanya berhasil kak");
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
