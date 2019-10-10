@@ -69,6 +69,15 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const registrasiUser = async agent => {
+    try {
+      console.log(JSON.stringify(request.body));
+      agent.add("Berhasil kak");
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
   const booking = agent => {
     agent.add(`Booking memek?`);
   };
@@ -111,7 +120,8 @@ app.post("/", (request, response, next) => {
   };
 
   intent.set("salam", salam);
-  intent.set("registrasi", registrasi);
+  intent.set("Registrasi", registrasi);
+  intent.set("Registrasi - Nama User", registrasiUser);
   intent.set("booking", booking);
   intent.set("Pesan Makanan - Pilih Menu", pesan);
   intent.set("Default Fallback Intent", fallback);
