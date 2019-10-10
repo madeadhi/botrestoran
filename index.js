@@ -76,7 +76,7 @@ app.post("/", (request, response, next) => {
         sender
       } = request.body.originalDetectIntentRequest.payload.data;
       const [result, metadata] = await sequelize.query(
-        `INSERT INTO tb_user VALUES (${sender.id}, ${message.text})`
+        `INSERT INTO tb_user VALUES ('${sender.id}', '${message.text}')`
       );
       console.log({ result, metadata });
       agent.add("Hmm... kayanya berhasil kak");
