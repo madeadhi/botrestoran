@@ -60,12 +60,11 @@ app.post("/", (request, response, next) => {
 
   const registrasi = async agent => {
     try {
-      const [respon] = await sequelize.query(
+      const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'registrasi'"
       );
-      agent.add(respon[0]);
+      agent.add(result[0].respon);
     } catch (error) {
-      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
