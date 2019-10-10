@@ -16,6 +16,24 @@ app.post("/", (request, response, next) => {
   const agent = new WebhookClient({ request, response });
   let intent = new Map();
 
+  const salam = async agent => {
+    try {
+      const {
+        message,
+        sender
+      } = request.body.originalDetectIntentRequest.payload.data;
+
+      const [user] = await sequelize.query(
+        `SELECT * FROM tb_user WHERE tb_user.id_user = ${sender.id}`
+      );
+      console.log(user);
+
+      agent.add(`${message.text} kak`);
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
   const booking = agent => {
     agent.add(`Booking memek?`);
   };
@@ -57,6 +75,7 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  intent.set("salam", salam);
   intent.set("booking", booking);
   intent.set("Pesan Makanan - Pilih Menu", pesan);
   intent.set("Default Fallback Intent", fallback);
