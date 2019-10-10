@@ -22,12 +22,6 @@ app.post("/", (request, response, next) => {
 
   const pesan = async agent => {
     try {
-      const {
-        message,
-        sender
-      } = request.body.originalDetectIntentRequest.payload.data;
-      console.log(message.text);
-      console.log(sender.id);
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
       result.map(data =>
         agent.add(
