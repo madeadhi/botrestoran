@@ -61,7 +61,7 @@ app.post("/", (request, response, next) => {
   const registrasi = async agent => {
     try {
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'registrasi'"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Registrasi'"
       );
       agent.add(result[0].respon);
     } catch (error) {
@@ -75,11 +75,18 @@ app.post("/", (request, response, next) => {
         message,
         sender
       } = request.body.originalDetectIntentRequest.payload.data;
-      const [result, metadata] = await sequelize.query(
+      const [insert, metadata] = await sequelize.query(
         `INSERT INTO tb_user VALUES ('${sender.id}', '${message.text}')`
       );
-      console.log({ result, metadata });
-      agent.add("Hmm... kayanya berhasil kak");
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Registrasi - Nama User'"
+      );
+
+      if (metadata > 0) {
+        agent.add(result[0].respon);
+      } else {
+        agent.add(result[1].respon);
+      }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
