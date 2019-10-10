@@ -53,7 +53,7 @@ app.post("/", (request, response, next) => {
   };
 
   intent.set("booking", booking);
-  intent.set("pesan_mknmin", pesan);
+  intent.set("Pesan Makanan - Pilih Menu", pesan);
   intent.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intent);
