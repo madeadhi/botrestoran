@@ -26,23 +26,32 @@ app.post("/", (request, response, next) => {
       const [user] = await sequelize.query(
         `SELECT * FROM tb_user WHERE tb_user.id_user = ${sender.id}`
       );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'salam'"
+      );
 
       if (user.length > 0) {
-        const [result] = await sequelize.query(
-          "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'salam'"
+        let respon = result[0].respon.replace("$user_name", user[0].nama);
+        respon = respon.replace("$message", message.text);
+
+        agent.add(respon);
+        agent.add(
+          new Card({
+            title: "-",
+            buttonText: "Menu",
+            buttonUrl: "menu"
+          })
         );
-
-        console.log(result);
-
-        agent.add(`Halo kak ${user[0].nama}`);
       } else {
-        const [result] = await sequelize.query(
-          "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'salam'"
+        const respon = result[1].respon.replace("$message", message.text);
+        agent.add(respon);
+        agent.add(
+          new Card({
+            title: "-",
+            buttonText: "Registrasi",
+            buttonUrl: "registrasi"
+          })
         );
-
-        console.log(result);
-
-        agent.add(`${message.text} kak, kakak belum punya akun nih`);
       }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
