@@ -99,8 +99,15 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const booking = agent => {
-    agent.add(`Booking memek?`);
+  const booking = async agent => {
+    try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'booking'"
+      );
+      agent.add(result[0].respon);
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
   };
 
   const pesan = async agent => {
@@ -153,7 +160,6 @@ app.post("/", (request, response, next) => {
         agent.add(result[0].respon);
       }
     } catch (error) {
-      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
