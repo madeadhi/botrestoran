@@ -137,7 +137,7 @@ app.post("/", (request, response, next) => {
         `INSERT INTO tb_pesanan VALUES (NULL, '${postback.payload}', '${sender.id}')`
       );
       const [menu] = await sequelize.query(
-        `SELECT * FROM tb_menu WHERE tb_menu.id_menu = '${postback.payload}'`
+        `SELECT * FROM tb_menu WHERE tb_menu.id = '${postback.payload}'`
       );
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Pesan Makanan - Pilih Menu'"
