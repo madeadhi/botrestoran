@@ -123,30 +123,26 @@ app.post("/", (request, response, next) => {
 
   const bookingTgl = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
-      // const {
-      //   message,
-      //   sender
-      // } = request.body.originalDetectIntentRequest.payload.data;
-      // const [insert, metadata] = await sequelize.query(
-      //   `INSERT INTO tb_user VALUES ('${sender.id}', '${message.text}')`
-      // );
+      const {
+        id
+      } = request.body.originalDetectIntentRequest.payload.data.sender;
+      const {
+        jml_orang,
+        tgl
+      } = request.body.queryResult.outputContexts[0].parameters;
+      const [insert, metadata] = await sequelize.query(
+        `INSERT INTO tb_booking VALUES (NULL, ${jml_orang}, '${tgl}', '${id}')`
+      );
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tanggal'"
       );
       agent.add(result[0].respon);
-      // if (metadata > 0) {
-      //   agent.add(result[0].respon);
-      //   agent.add(
-      //     new Card({
-      //       title: "-",
-      //       buttonText: "Menu",
-      //       buttonUrl: "menu"
-      //     })
-      //   );
-      // } else {
-      //   agent.add(result[1].respon);
-      // }
+
+      if (metadata > 0) {
+        agent.add(result[0].respon);
+      } else {
+        agent.add(result[1].respon);
+      }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
