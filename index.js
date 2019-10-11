@@ -110,11 +110,7 @@ app.post("/", (request, response, next) => {
         new Card({
           title: "-",
           buttonText: "Pesan Menu",
-          buttonUrl: "buat pesanan",
-          buttonText: "Booking Kursi",
-          buttonUrl: "booking",
-          buttonText: "Pesan Menu",
-          buttonUrl: "kritik"
+          buttonUrl: "buat pesanan"
         })
       );
     } catch (error) {
