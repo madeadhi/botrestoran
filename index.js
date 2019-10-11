@@ -128,30 +128,30 @@ app.post("/", (request, response, next) => {
   const pilihMenu = async agent => {
     try {
       console.log(JSON.stringify(request.body));
-      // const {
-      //   message,
-      //   sender
-      // } = request.body.originalDetectIntentRequest.payload.data;
+      const {
+        postback,
+        sender
+      } = request.body.originalDetectIntentRequest.payload.data;
 
-      // const [insert, metadata] = await sequelize.query(
-      //   `INSERT INTO tb_pesanan VALUES (NULL, '${message.text}', '${sender.id}')`
-      // );
-      // const [menu] = await sequelize.query(
-      //   `SELECT * FROM tb_menu WHERE tb_menu.id_menu = '${message.text}'`
-      // );
-      // const [result] = await sequelize.query(
-      //   "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Pesan Makanan - Pilih Menu'"
-      // );
+      const [insert, metadata] = await sequelize.query(
+        `INSERT INTO tb_pesanan VALUES (NULL, '${postback.payload}', '${sender.id}')`
+      );
+      const [menu] = await sequelize.query(
+        `SELECT * FROM tb_menu WHERE tb_menu.id_menu = '${postback.payload}'`
+      );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Pesan Makanan - Pilih Menu'"
+      );
 
-      // if (metadata > 0) {
-      //   const respon = result[0].respon.replace(
-      //     "$nama_makanan",
-      //     menu[0].nama_makanan
-      //   );
-      //   agent.add(respon);
-      // } else {
-      //   agent.add(result[0].respon);
-      // }
+      if (metadata > 0) {
+        const respon = result[0].respon.replace(
+          "$nama_makanan",
+          menu[0].nama_makanan
+        );
+        agent.add(respon);
+      } else {
+        agent.add(result[0].respon);
+      }
     } catch (error) {
       console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
