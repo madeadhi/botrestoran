@@ -18,7 +18,6 @@ app.post("/", (request, response, next) => {
 
   const salam = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
       const {
         message,
         sender
@@ -107,13 +106,10 @@ app.post("/", (request, response, next) => {
       );
 
       agent.add(result[0].respon);
-      agent.add(
-        new Card({
-          title: "-",
-          buttonText: "Pesan Menu",
-          buttonUrl: "buat pesanan"
-        })
-      );
+      const card = new Card({ title: "-" });
+      card.setButton({ text: "Pesan Makanan", url: "buat pesanan" });
+      card.setButton({ text: "Booking", url: "booking" });
+      agent.add(card);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
