@@ -99,23 +99,24 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const menu = agent => {
+  const menu = async agent => {
     try {
-      const [result] = await sequelize.query("SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'menu");
-      
-      agent.add(result[0].respon);
-        agent.add(
-          new Card({
-            title: "-",
-            buttonText: "Pesan Menu",
-            buttonUrl: "buat pesanan",
-            buttonText: "Booking Kursi",
-            buttonUrl: "booking",
-            buttonText: "Pesan Menu",
-            buttonUrl: "kritik"
-          })
-        );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'menu"
+      );
 
+      agent.add(result[0].respon);
+      agent.add(
+        new Card({
+          title: "-",
+          buttonText: "Pesan Menu",
+          buttonUrl: "buat pesanan",
+          buttonText: "Booking Kursi",
+          buttonUrl: "booking",
+          buttonText: "Pesan Menu",
+          buttonUrl: "kritik"
+        })
+      );
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
