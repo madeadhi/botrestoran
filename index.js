@@ -110,6 +110,36 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const bookingTgl = async agent => {
+    try {
+      console.log(JSON.stringify(request.body));
+      // const {
+      //   message,
+      //   sender
+      // } = request.body.originalDetectIntentRequest.payload.data;
+      // const [insert, metadata] = await sequelize.query(
+      //   `INSERT INTO tb_booking VALUES (NULL, '${}', '${sender.id}', '${message.text}')`
+      // );
+      // const [result] = await sequelize.query(
+      //   "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Registrasi - Nama User'"
+      // );
+      // if (metadata > 0) {
+      //   agent.add(result[0].respon);
+      //   agent.add(
+      //     new Card({
+      //       title: "-",
+      //       buttonText: "Menu",
+      //       buttonUrl: "menu"
+      //     })
+      //   );
+      // } else {
+      //   agent.add(result[1].respon);
+      // }
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
   const pesan = async agent => {
     try {
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
@@ -178,6 +208,7 @@ app.post("/", (request, response, next) => {
   intent.set("Registrasi", registrasi);
   intent.set("Registrasi - Nama User", registrasiUser);
   intent.set("Booking", booking);
+  intent.set("Booking - Tanggal", bookingTgl);
   intent.set("Pesan Makanan", pesan);
   intent.set("Pesan Makanan - Pilih Menu", pilihMenu);
   intent.set("Default Fallback Intent", fallback);
