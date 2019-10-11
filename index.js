@@ -136,7 +136,6 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tanggal'"
       );
-      agent.add(result[0].respon);
 
       if (metadata > 0) {
         agent.add(result[0].respon);
@@ -144,6 +143,7 @@ app.post("/", (request, response, next) => {
         agent.add(result[1].respon);
       }
     } catch (error) {
+      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
