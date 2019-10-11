@@ -102,7 +102,7 @@ app.post("/", (request, response, next) => {
   const booking = async agent => {
     try {
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'booking'"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking'"
       );
       agent.add(result[0].respon);
     } catch (error) {
@@ -177,7 +177,7 @@ app.post("/", (request, response, next) => {
   intent.set("salam", salam);
   intent.set("Registrasi", registrasi);
   intent.set("Registrasi - Nama User", registrasiUser);
-  intent.set("booking", booking);
+  intent.set("Booking", booking);
   intent.set("Pesan Makanan", pesan);
   intent.set("Pesan Makanan - Pilih Menu", pilihMenu);
   intent.set("Default Fallback Intent", fallback);
