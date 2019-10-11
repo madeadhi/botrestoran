@@ -102,7 +102,7 @@ app.post("/", (request, response, next) => {
   const menu = async agent => {
     try {
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'menu"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'menu'"
       );
 
       agent.add(result[0].respon);
