@@ -84,9 +84,38 @@ app.post("/", (request, response, next) => {
 
       if (metadata > 0) {
         agent.add(result[0].respon);
+        agent.add(
+          new Card({
+            title: "-",
+            buttonText: "Menu",
+            buttonUrl: "menu"
+          })
+        );
       } else {
         agent.add(result[1].respon);
       }
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
+  const menu = agent => {
+    try {
+      const [result] = await sequelize.query("SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'menu");
+      
+      agent.add(result[0].respon);
+        agent.add(
+          new Card({
+            title: "-",
+            buttonText: "Pesan Menu",
+            buttonUrl: "buat pesanan",
+            buttonText: "Booking Kursi",
+            buttonUrl: "booking",
+            buttonText: "Pesan Menu",
+            buttonUrl: "kritik"
+          })
+        );
+
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
@@ -98,12 +127,6 @@ app.post("/", (request, response, next) => {
 
   const pesan = async agent => {
     try {
-      const {
-        message,
-        sender
-      } = request.body.originalDetectIntentRequest.payload.data;
-      console.log(message.text);
-      console.log(sender.id);
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
       result.map(data =>
         agent.add(
@@ -136,6 +159,7 @@ app.post("/", (request, response, next) => {
   intent.set("salam", salam);
   intent.set("Registrasi", registrasi);
   intent.set("Registrasi - Nama User", registrasiUser);
+  intent.set("menu", menu);
   intent.set("booking", booking);
   intent.set("Pesan Makanan - Pilih Menu", pesan);
   intent.set("Default Fallback Intent", fallback);
