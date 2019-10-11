@@ -106,8 +106,13 @@ app.post("/", (request, response, next) => {
       );
 
       agent.add(result[0].respon);
-      const card = new Card({ title: "-" });
+      const card = new Card({
+        title: "Pilih tombol ini untuk memesan makanan"
+      });
       card.setButton({ text: "Pesan Makanan", url: "buat pesanan" });
+      const card = new Card({
+        title: "Pilih tombol ini untuk membooking meja"
+      });
       card.setButton({ text: "Booking", url: "booking" });
       agent.add(card);
     } catch (error) {
