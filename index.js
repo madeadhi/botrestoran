@@ -134,7 +134,7 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tanggal'"
       );
-
+      agent.add(result[0].respon);
       // if (metadata > 0) {
       //   agent.add(result[0].respon);
       //   agent.add(
