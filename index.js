@@ -138,7 +138,7 @@ app.post("/", (request, response, next) => {
   intent.set("Registrasi", registrasi);
   intent.set("Registrasi - Nama User", registrasiUser);
   intent.set("booking", booking);
-  intent.set("Pesan Makanan - Pilih Menu", pesan);
+  intent.set("Pesan Makanan", pesan);
   intent.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intent);
