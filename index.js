@@ -115,10 +115,41 @@ app.post("/", (request, response, next) => {
               data.harga
             ).toLocaleString("ID")}`,
             buttonText: "Pesan",
-            buttonUrl: `pesan-${data.id}`
+            buttonUrl: data.id
           })
         )
       );
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
+  const pilihMenu = async agent => {
+    try {
+      const {
+        message,
+        sender
+      } = request.body.originalDetectIntentRequest.payload.data;
+
+      const [insert, metadata] = await sequelize.query(
+        `INSERT INTO tb_pesanan VALUES (NULL, '${message.text}', '${sender.id}')`
+      );
+      const [menu] = await sequelize.query(
+        `SELECT * FROM tb_menu WHERE tb_menu.id_menu = '${message.text}'`
+      );
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Pesan Makanan - Pilih Menu'"
+      );
+
+      if (metadata > 0) {
+        const respon = result[0].respon.replace(
+          "$nama_makanan",
+          menu[0].nama_makanan
+        );
+        agent.add(respon);
+      } else {
+        agent.add(result[0].respon);
+      }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
@@ -139,6 +170,7 @@ app.post("/", (request, response, next) => {
   intent.set("Registrasi - Nama User", registrasiUser);
   intent.set("booking", booking);
   intent.set("Pesan Makanan", pesan);
+  intent.set("Pesan Makanan - Pilih Menu", pilihMenu);
   intent.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intent);
