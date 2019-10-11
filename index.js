@@ -120,6 +120,7 @@ app.post("/", (request, response, next) => {
         )
       );
     } catch (error) {
+      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
@@ -151,6 +152,7 @@ app.post("/", (request, response, next) => {
         agent.add(result[0].respon);
       }
     } catch (error) {
+      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
