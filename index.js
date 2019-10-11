@@ -99,18 +99,6 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  const menu = async agent => {
-    try {
-      const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'menu'"
-      );
-
-      agent.add(result[0].respon);
-    } catch (error) {
-      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
-    }
-  };
-
   const booking = agent => {
     agent.add(`Booking memek?`);
   };
@@ -149,7 +137,6 @@ app.post("/", (request, response, next) => {
   intent.set("salam", salam);
   intent.set("Registrasi", registrasi);
   intent.set("Registrasi - Nama User", registrasiUser);
-  intent.set("menu", menu);
   intent.set("booking", booking);
   intent.set("Pesan Makanan - Pilih Menu", pesan);
   intent.set("Default Fallback Intent", fallback);
