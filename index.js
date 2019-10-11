@@ -18,6 +18,7 @@ app.post("/", (request, response, next) => {
 
   const salam = async agent => {
     try {
+      console.log(JSON.stringify(request.body));
       const {
         message,
         sender
