@@ -106,20 +106,6 @@ app.post("/", (request, response, next) => {
       );
 
       agent.add(result[0].respon);
-      agent.add(
-        new Card({
-          title: "Pilih tombol ini untuk memesan makanan",
-          buttonText: "Pesan Makanan",
-          buttonUrl: `1`
-        })
-      );
-      agent.add(
-        new Card({
-          title: "Pilih tombol ini untuk memesan tempat",
-          buttonText: "Booking",
-          buttonUrl: `booking`
-        })
-      );
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
