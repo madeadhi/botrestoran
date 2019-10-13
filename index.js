@@ -204,10 +204,24 @@ app.post("/", (request, response, next) => {
 
   const kritik = async agent => {
     try {
+      const {
+        message,
+        sender
+      } = request.body.originalDetectIntentRequest.payload.data;
+
+      const [user] = await sequelize.query(
+        `SELECT * FROM tb_user WHERE tb_user.id_user = ${sender.id}`
+      );
+
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Kritik'"
       );
-      agent.add(result[0].respon);
+      if (user.length > 0) {
+        let respon = result[0].respon.replace("$user_name", user[0].nama);
+        agent.add(respon);
+      }
+
+      // agent.add(result[0].respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
