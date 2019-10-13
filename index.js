@@ -202,6 +202,17 @@ app.post("/", (request, response, next) => {
     }
   };
 
+  const kritik = async agent => {
+    try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Kritik'"
+      );
+      let respon = result[0].respon.replace("$user_name", user[0].nama);
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
   const fallback = async agent => {
     try {
       // const text = request.body.queryResult.queryText;
@@ -224,6 +235,7 @@ app.post("/", (request, response, next) => {
   intent.set("Booking - Orang - Tanggal", bookingTgl);
   intent.set("Pesan Makanan", pesan);
   intent.set("Pesan Makanan - Pilih Menu", pilihMenu);
+  intent.set("Kritik", kritik);
   intent.set("Default Fallback Intent", fallback);
 
   agent.handleRequest(intent);
