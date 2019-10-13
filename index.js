@@ -204,9 +204,13 @@ app.post("/", (request, response, next) => {
 
   const fallback = async agent => {
     try {
-      const text = request.body.queryResult.queryText;
-      const intent = text.split("-")[0];
-      const id = text.split("-")[1];
+      // const text = request.body.queryResult.queryText;
+      // const intent = text.split("-")[0];
+      // const id = text.split("-")[1];
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Default Fallback Intent'"
+      );
+      agent.add(result[0].respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
