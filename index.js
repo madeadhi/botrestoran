@@ -216,10 +216,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Kritik'"
       );
-      if (user.length > 0) {
-        let respon = result[0].respon.replace("$user_name", user[0].nama);
-        agent.add(respon);
-      }
+
+      let respon = result[0].respon.replace("$user_name", user[0].nama);
+      agent.add(respon);
 
       // agent.add(result[0].respon);
     } catch (error) {
