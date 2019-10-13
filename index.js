@@ -207,7 +207,7 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Kritik'"
       );
-      let respon = result[0].respon.replace("$user_name", user[0].nama);
+      agent.add(result[0].respon.replace("$user_name", user[0].nama));
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
