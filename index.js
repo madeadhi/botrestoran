@@ -240,7 +240,7 @@ app.post("/", (request, response, next) => {
     }
   };
 
-  intent.set("salam", salam);
+  intent.set("Salam", salam);
   intent.set("Registrasi", registrasi);
   intent.set("Registrasi - Nama User", registrasiUser);
   intent.set("Booking", booking);
