@@ -214,7 +214,7 @@ app.post("/", (request, response, next) => {
       console.log(JSON.stringify(request.body));
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
       const id_inbox = await inbox("button");
-      result.map(async data =>
+      result.map(async data => {
         agent.add(
           new Card({
             title: data.nama_makanan,
@@ -225,9 +225,9 @@ app.post("/", (request, response, next) => {
             buttonText: "Pesan",
             buttonUrl: `${data.id}`
           })
-        )
-      );
-      if (id_inbox) await outbox(id_inbox, data.id);
+        );
+        if (id_inbox) await outbox(id_inbox, data.id);
+      });
     } catch (error) {
       console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
