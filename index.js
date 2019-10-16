@@ -187,6 +187,7 @@ app.post("/", (request, response, next) => {
       agent.add(result[0].respon);
       if (id_inbox) await outbox(id_inbox, result[0].respon);
     } catch (error) {
+      console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
   };
