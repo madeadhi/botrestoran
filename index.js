@@ -18,6 +18,7 @@ app.post("/", (request, response, next) => {
 
   const salam = async agent => {
     try {
+      console.log(JSON.stringify(request.body));
       const {
         message,
         sender
@@ -67,6 +68,14 @@ app.post("/", (request, response, next) => {
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
+  };
+
+  const inbox = async () => {
+    try {
+      const [result, metadata] = await sequelize.query(
+        "INSERT INTO tb_inbox (id_in, idchat, tgl, isipesan, status"
+      );
+    } catch (error) {}
   };
 
   const registrasiUser = async agent => {
