@@ -206,7 +206,7 @@ app.post("/", (request, response, next) => {
         `INSERT INTO tb_booking VALUES (NULL, ${jml_orang}, '${tgl}', '${id}', '${telp}')`
       );
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tanggal - NoHp'"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tgl - NoHp'"
       );
 
       if (metadata > 0) {
