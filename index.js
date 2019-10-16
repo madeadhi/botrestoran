@@ -317,6 +317,7 @@ app.post("/", (request, response, next) => {
   intent.set("Booking", booking);
   intent.set("Booking - Orang", bookingJmlOrang);
   intent.set("Booking - Orang - Tgl", bookingTgl);
+  intent.set("Booking - Orang - Tgl - NoHp", bookingTelp);
   intent.set("Pesan Makanan", pesan);
   intent.set("Pesan Makanan - Pilih Menu", pilihMenu);
   intent.set("Kritik", kritik);
