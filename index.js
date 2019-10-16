@@ -77,7 +77,7 @@ app.post("/", (request, response, next) => {
         agent.add(respon);
         agent.add(
           new Card({
-            title: "-",
+            title: "BotRestoran",
             buttonText: "Menu",
             buttonUrl: "menu"
           })
@@ -86,14 +86,18 @@ app.post("/", (request, response, next) => {
         if (id_inbox) await outbox(id_inbox, "menu");
       } else {
         const respon = result[1].respon.replace("$message", message.text);
+
+        const id_inbox = await inbox();
         agent.add(respon);
         agent.add(
           new Card({
-            title: "-",
+            title: "BotRestoran",
             buttonText: "Registrasi",
             buttonUrl: "registrasi"
           })
         );
+        if (id_inbox) await outbox(id_inbox, respon);
+        if (id_inbox) await outbox(id_inbox, "registrasi");
       }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
@@ -127,16 +131,21 @@ app.post("/", (request, response, next) => {
       );
 
       if (metadata > 0) {
+        const id_inbox = await inbox();
         agent.add(result[0].respon);
         agent.add(
           new Card({
-            title: "-",
+            title: "BotRestoran",
             buttonText: "Menu",
             buttonUrl: "menu"
           })
         );
+        if (id_inbox) await outbox(id_inbox, result[0].respon);
+        if (id_inbox) await outbox(id_inbox, "menu");
       } else {
+        const id_inbox = await inbox();
         agent.add(result[1].respon);
+        if (id_inbox) await outbox(id_inbox, result[1].respon);
       }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
@@ -148,7 +157,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking'"
       );
+      const id_inbox = await inbox("button");
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
@@ -159,7 +170,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang'"
       );
+      const id_inbox = await inbox();
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
@@ -182,9 +195,13 @@ app.post("/", (request, response, next) => {
       );
 
       if (metadata > 0) {
+        const id_inbox = await inbox();
         agent.add(result[0].respon);
+        if (id_inbox) await outbox(id_inbox, result[0].respon);
       } else {
+        const id_inbox = await inbox();
         agent.add(result[1].respon);
+        if (id_inbox) await outbox(id_inbox, result[1].respon);
       }
     } catch (error) {
       console.log(error);
@@ -196,7 +213,8 @@ app.post("/", (request, response, next) => {
     try {
       console.log(JSON.stringify(request.body));
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
-      result.map(data =>
+      const id_inbox = await inbox("button");
+      result.map(async data =>
         agent.add(
           new Card({
             title: data.nama_makanan,
@@ -209,6 +227,7 @@ app.post("/", (request, response, next) => {
           })
         )
       );
+      if (id_inbox) await outbox(id_inbox, data.id);
     } catch (error) {
       console.log(error);
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
@@ -238,9 +257,13 @@ app.post("/", (request, response, next) => {
           "$nama_makanan",
           menu[0].nama_makanan
         );
+        const id_inbox = await inbox("button");
         agent.add(respon);
+        if (id_inbox) await outbox(id_inbox, respon);
       } else {
+        const id_inbox = await inbox("button");
         agent.add(result[0].respon);
+        if (id_inbox) await outbox(id_inbox, result[0].respon);
       }
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
@@ -263,9 +286,10 @@ app.post("/", (request, response, next) => {
       );
 
       let respon = result[0].respon.replace("$user_name", user[0].nama);
-      agent.add(respon);
 
-      // agent.add(result[0].respon);
+      const id_inbox = await inbox("button");
+      agent.add(respon);
+      if (id_inbox) await outbox(id_inbox, respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
@@ -279,7 +303,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Default Fallback Intent'"
       );
+      const id_inbox = await inbox();
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
