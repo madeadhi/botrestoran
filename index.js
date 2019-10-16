@@ -180,18 +180,32 @@ app.post("/", (request, response, next) => {
 
   const bookingTgl = async agent => {
     try {
+      const [result] = await sequelize.query(
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tgl'"
+      );
+      const id_inbox = await inbox();
+      agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon);
+    } catch (error) {
+      agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
+    }
+  };
+
+  const bookingTelp = async agent => {
+    try {
       const {
         id
       } = request.body.originalDetectIntentRequest.payload.data.sender;
       const {
         jml_orang,
-        tgl
+        tgl,
+        telp
       } = request.body.queryResult.outputContexts[0].parameters;
       const [insert, metadata] = await sequelize.query(
-        `INSERT INTO tb_booking VALUES (NULL, ${jml_orang}, '${tgl}', '${id}')`
+        `INSERT INTO tb_booking VALUES (NULL, ${jml_orang}, '${tgl}', '${id}', '${telp}')`
       );
       const [result] = await sequelize.query(
-        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tanggal'"
+        "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Booking - Orang - Tanggal - NoHp'"
       );
 
       if (metadata > 0) {
