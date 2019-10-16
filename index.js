@@ -73,7 +73,7 @@ app.post("/", (request, response, next) => {
   const inbox = async () => {
     try {
       const [result, metadata] = await sequelize.query(
-        "INSERT INTO tb_inbox (id_in, idchat, tgl, isipesan, status"
+        "INSERT INTO tb_inbox (id_in, idchat, tgl, id_user, isipesan, status"
       );
     } catch (error) {}
   };
