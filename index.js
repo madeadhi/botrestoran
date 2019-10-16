@@ -19,12 +19,12 @@ app.post("/", (request, response, next) => {
   const outbox = async (inbox_id, message) => {
     try {
       const [result, metadata] = await sequelize.query(
-        `INSERT INTO tb_outbox (pesan_bot, id_inbox) VALUES ('${message}', ${inbox_id})`
+        `INSERT INTO tb_outbox (id_in, isipesan) VALUES (${inbox_id}, '${message}')`
       );
 
       if (metadata > 0) {
         await sequelize.query(
-          `UPDATE tb_inbox SET tb_inbox.status = '1' WHERE tb_inbox.id_inbox = ${inbox_id}`
+          `UPDATE tb_inbox SET tb_inbox.status = '1' WHERE tb_inbox.id_in = ${inbox_id}`
         );
       }
     } catch (error) {
@@ -35,19 +35,17 @@ app.post("/", (request, response, next) => {
   const inbox = async (type = null) => {
     try {
       const message_id = type
-        ? request.body.originalDetectIntentRequest.payload.callback_query
-            .message.message_id
-        : request.body.originalDetectIntentRequest.payload.message_id;
+        ? request.body.responseId
+        : request.body.originalDetectIntentRequest.payload.data.message.mid;
       const { queryText } = request.body.queryResult;
       const date = new Date();
-      const id = type
-        ? request.body.originalDetectIntentRequest.payload.callback_query.from
-            .id
-        : request.body.originalDetectIntentRequest.payload.from.id;
+      const {
+        id
+      } = request.body.originalDetectIntentRequest.payload.data.sender;
 
       const [result, metadata] = await sequelize.query(
-        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
-          1}-${date.getDate()}', ${id}, '0')`,
+        `INSERT INTO tb_inbox (idchat, tgl, id_user, isipesan, status) VALUES ('${message_id}', '${date.getFullYear()}-${date.getMonth() +
+          1}-${date.getDate()}', '${id}', '${queryText}', '0')`,
         { type: sequelize.QueryTypes.INSERT }
       );
 
@@ -75,6 +73,7 @@ app.post("/", (request, response, next) => {
         let respon = result[0].respon.replace("$user_name", user[0].nama);
         respon = respon.replace("$message", message.text);
 
+        const id_inbox = await inbox();
         agent.add(respon);
         agent.add(
           new Card({
@@ -83,6 +82,8 @@ app.post("/", (request, response, next) => {
             buttonUrl: "menu"
           })
         );
+        if (id_inbox) await outbox(id_inbox, respon);
+        if (id_inbox) await outbox(id_inbox, "menu");
       } else {
         const respon = result[1].respon.replace("$message", message.text);
         agent.add(respon);
@@ -104,7 +105,9 @@ app.post("/", (request, response, next) => {
       const [result] = await sequelize.query(
         "SELECT tb_respon.respon FROM tb_respon WHERE tb_respon.inten = 'Registrasi'"
       );
+      const id_inbox = await inbox("button");
       agent.add(result[0].respon);
+      if (id_inbox) await outbox(id_inbox, result[0].respon);
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
@@ -348,4 +351,58 @@ const a = {
   },
   session:
     "projects/botrestoran-jaqrfp/agent/sessions/110a3746-1f9c-4084-a9b6-fa5b96301186"
+};
+
+const f = {
+  responseId: "2da8c548-260a-4c1a-aa33-76fab9066ce8-f6406966",
+  queryResult: {
+    queryText: "Buat pesanan",
+    parameters: {},
+    allRequiredParamsPresent: true,
+    fulfillmentMessages: [{ text: { text: [""] } }],
+    outputContexts: [
+      {
+        name:
+          "projects/botrestoran-jaqrfp/agent/sessions/d750df34-a56f-4cb3-a6eb-5a3eff97cb57/contexts/pesanmakanan-followup",
+        lifespanCount: 1
+      },
+      {
+        name:
+          "projects/botrestoran-jaqrfp/agent/sessions/d750df34-a56f-4cb3-a6eb-5a3eff97cb57/contexts/generic",
+        lifespanCount: 4,
+        parameters: {
+          facebook_sender_id: "2618576828163310",
+          slm_sapa: "Pagi",
+          "slm_sapa.original": "",
+          menu: "Menu",
+          "menu.original": "menu"
+        }
+      },
+      {
+        name:
+          "projects/botrestoran-jaqrfp/agent/sessions/d750df34-a56f-4cb3-a6eb-5a3eff97cb57/contexts/booking-followup"
+      }
+    ],
+    intent: {
+      name:
+        "projects/botrestoran-jaqrfp/agent/intents/5663fbd8-246d-4e6b-a70c-eab142a6a2c7",
+      displayName: "Pesan Makanan"
+    },
+    intentDetectionConfidence: 1,
+    languageCode: "en"
+  },
+  originalDetectIntentRequest: {
+    source: "facebook",
+    payload: {
+      data: {
+        timestamp: 1571217920754,
+        sender: { id: "2618576828163310" },
+        postback: { payload: "Buat pesanan", title: "Pesan Makanan" },
+        recipient: { id: "112970710107566" }
+      },
+      source: "facebook"
+    }
+  },
+  session:
+    "projects/botrestoran-jaqrfp/agent/sessions/d750df34-a56f-4cb3-a6eb-5a3eff97cb57"
 };
