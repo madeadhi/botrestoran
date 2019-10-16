@@ -16,9 +16,49 @@ app.post("/", (request, response, next) => {
   const agent = new WebhookClient({ request, response });
   let intent = new Map();
 
+  const outbox = async (inbox_id, message) => {
+    try {
+      const [result, metadata] = await sequelize.query(
+        `INSERT INTO tb_outbox (pesan_bot, id_inbox) VALUES ('${message}', ${inbox_id})`
+      );
+
+      if (metadata > 0) {
+        await sequelize.query(
+          `UPDATE tb_inbox SET tb_inbox.status = '1' WHERE tb_inbox.id_inbox = ${inbox_id}`
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const inbox = async (type = null) => {
+    try {
+      const message_id = type
+        ? request.body.originalDetectIntentRequest.payload.callback_query
+            .message.message_id
+        : request.body.originalDetectIntentRequest.payload.message_id;
+      const { queryText } = request.body.queryResult;
+      const date = new Date();
+      const id = type
+        ? request.body.originalDetectIntentRequest.payload.callback_query.from
+            .id
+        : request.body.originalDetectIntentRequest.payload.from.id;
+
+      const [result, metadata] = await sequelize.query(
+        `INSERT INTO tb_inbox (id_pesan, pesan_user, tanggal, id_user, status) VALUES (${message_id}, '${queryText}', '${date.getFullYear()}-${date.getMonth() +
+          1}-${date.getDate()}', ${id}, '0')`,
+        { type: sequelize.QueryTypes.INSERT }
+      );
+
+      return metadata > 0 ? result : null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const salam = async agent => {
     try {
-      console.log(JSON.stringify(request.body));
       const {
         message,
         sender
@@ -68,14 +108,6 @@ app.post("/", (request, response, next) => {
     } catch (error) {
       agent.add("Mohon maaf, terjadi kesalahan. Silahkan ulangi kembali");
     }
-  };
-
-  const inbox = async () => {
-    try {
-      const [result, metadata] = await sequelize.query(
-        "INSERT INTO tb_inbox (id_in, idchat, tgl, id_user, isipesan, status"
-      );
-    } catch (error) {}
   };
 
   const registrasiUser = async agent => {
@@ -159,6 +191,7 @@ app.post("/", (request, response, next) => {
 
   const pesan = async agent => {
     try {
+      console.log(JSON.stringify(request.body));
       const [result] = await sequelize.query("SELECT * FROM tb_menu");
       result.map(data =>
         agent.add(
@@ -266,3 +299,53 @@ app.post("/", (request, response, next) => {
 app.listen(port, () => {
   console.log(`server start at ${port}`);
 });
+
+const a = {
+  responseId: "03da80d0-a417-4559-9874-fd7e5b860ad4-f6406966",
+  queryResult: {
+    queryText: "Siang",
+    parameters: { slm_sapa: "Siang" },
+    allRequiredParamsPresent: true,
+    fulfillmentMessages: [
+      { text: { text: [""] }, platform: "FACEBOOK" },
+      { text: { text: [""] } }
+    ],
+    outputContexts: [
+      {
+        name:
+          "projects/botrestoran-jaqrfp/agent/sessions/110a3746-1f9c-4084-a9b6-fa5b96301186/contexts/generic",
+        lifespanCount: 4,
+        parameters: {
+          facebook_sender_id: "2618576828163310",
+          slm_sapa: "Siang",
+          "slm_sapa.original": ""
+        }
+      }
+    ],
+    intent: {
+      name:
+        "projects/botrestoran-jaqrfp/agent/intents/90ae9a3c-4e37-43ad-92ea-144fd74ea657",
+      displayName: "Salam"
+    },
+    intentDetectionConfidence: 1,
+    languageCode: "en"
+  },
+  originalDetectIntentRequest: {
+    source: "facebook",
+    payload: {
+      data: {
+        timestamp: 1571206697017,
+        sender: { id: "2618576828163310" },
+        recipient: { id: "112970710107566" },
+        message: {
+          text: "Siang",
+          mid:
+            "hAXkBWn5RphJYfEOXP2dvBOdaA4A7f4mjDsPj1qPwqpthHYfKG6Jd-e3EhaGDbpM6_x4m4yg29y4wAXmKNtVTg"
+        }
+      },
+      source: "facebook"
+    }
+  },
+  session:
+    "projects/botrestoran-jaqrfp/agent/sessions/110a3746-1f9c-4084-a9b6-fa5b96301186"
+};
